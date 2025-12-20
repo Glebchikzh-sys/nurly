@@ -105,7 +105,7 @@ const App: React.FC = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-full relative overflow-hidden">
-        <main className="flex-1 overflow-y-auto no-scrollbar relative flex flex-col">
+        <main id="main-scroll-container" className="flex-1 overflow-y-auto no-scrollbar relative flex flex-col">
           {renderView()}
         </main>
         

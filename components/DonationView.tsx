@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import QRCode from 'react-qr-code';
+import { useAppContext } from '../contexts/AppContext';
 
 interface DonationViewProps {
   onBack: () => void;
@@ -29,12 +30,13 @@ const DONATION_OPTIONS: CryptoOption[] = [
   {
     id: 'usdt',
     name: 'USDT',
-    network: 'TRC-20',
+    network: 'TRC-20 (TRX)',
     address: 'TVYxkXkS17iXDrt2FT53DsuksbQLrLioyq' 
   }
 ];
 
 export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
+  const { t } = useAppContext();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -56,11 +58,11 @@ export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
         <div className="flex items-center gap-4">
           <button 
             onClick={onBack}
-            className="text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 transition-colors p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer"
+            className="text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 transition-colors p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer rtl:rotate-180"
           >
             <span className="material-symbols-outlined text-3xl">arrow_back</span>
           </button>
-          <h1 className="text-xl font-bold tracking-tight text-gray-800 dark:text-slate-100">Support</h1>
+          <h1 className="text-xl font-bold tracking-tight text-gray-800 dark:text-slate-100">{t('support')}</h1>
         </div>
       </div>
 
@@ -71,7 +73,7 @@ export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
           {/* 2. Intro Text */}
           <div className="space-y-4">
             <p className="text-gray-600 dark:text-slate-300 leading-relaxed text-sm md:text-base font-medium transition-colors">
-              Nurly is free and anonymous. If you wish, you can support its development through an anonymous crypto donation.
+              {t('support_desc')}
             </p>
           </div>
 
@@ -93,7 +95,7 @@ export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
                       onClick={() => toggleQr(option.id)}
                       className="text-xs font-bold text-sage hover:text-sage-dark dark:hover:text-sage-light transition-colors px-3 py-1.5 rounded-lg hover:bg-sage/10 dark:hover:bg-sage/20"
                     >
-                      {expandedId === option.id ? 'Hide QR' : 'Show QR'}
+                      {expandedId === option.id ? t('hide_qr') : t('show_qr')}
                     </button>
                   </div>
                 </div>
@@ -101,7 +103,7 @@ export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
                 {/* Address Box */}
                 <button
                   onClick={() => handleCopy(option.address, option.id)}
-                  className="w-full text-left group outline-none"
+                  className="w-full text-start group outline-none"
                 >
                   <div className="flex items-center h-14 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md hover:border-sage/30 dark:hover:border-sage/30 transition-all duration-200 overflow-hidden">
                      
@@ -113,9 +115,9 @@ export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
                      </div>
 
                      {/* Fixed Copy Button Area - Stable Dimensions */}
-                     <div className="w-16 h-full flex items-center justify-center border-l border-gray-100 dark:border-white/5 bg-gray-50/30 dark:bg-white/5 text-gray-400 dark:text-slate-500 group-hover:text-sage dark:group-hover:text-sage transition-colors shrink-0">
+                     <div className="w-16 h-full flex items-center justify-center border-l border-gray-100 dark:border-white/5 bg-gray-50/30 dark:bg-white/5 text-gray-400 dark:text-slate-500 group-hover:text-sage dark:group-hover:text-sage transition-colors shrink-0 rtl:border-l-0 rtl:border-r">
                         {copiedId === option.id ? (
-                            <span className="text-[10px] font-bold text-sage uppercase tracking-wider animate-fade-in">Copied</span>
+                            <span className="material-symbols-outlined text-xl text-sage animate-fade-in">check</span>
                         ) : (
                             <span className="material-symbols-outlined text-xl">content_copy</span>
                         )}
@@ -137,7 +139,7 @@ export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
                             fgColor="#111111"
                         />
                         <span className="text-[10px] text-gray-400 dark:text-slate-400 font-bold uppercase tracking-widest transition-colors">
-                            Scan to send {option.network}
+                            {t('scan_to_send')} {option.network}
                         </span>
                     </div>
                   </div>
@@ -149,7 +151,7 @@ export const DonationView: React.FC<DonationViewProps> = ({ onBack }) => {
           {/* 5. Footer Note */}
           <div className="pt-8 border-t border-gray-100 dark:border-white/5 pb-12 transition-colors">
             <p className="text-xs text-gray-400 dark:text-slate-500 text-center leading-relaxed transition-colors">
-              Donations are anonymous. No personal data is collected.
+              {t('privacy_assurance')}
             </p>
           </div>
 

@@ -92,9 +92,18 @@ export const usePrayerNotifications = () => {
         
         // Trigger Browser Notification
         if (Notification.permission === 'granted') {
+          // Calculate formatted time based on settings
+          const locale = settings.language;
+          const is24Hour = ['ru', 'tr', 'de', 'fr', 'es'].includes(locale);
+          const timeStr = activePrayer.time.toLocaleTimeString(locale, { 
+              hour: '2-digit', 
+              minute: '2-digit', 
+              hour12: !is24Hour 
+          });
+
           try {
             new Notification(`Time for ${activePrayer.name}`, {
-              body: `It is now ${activePrayer.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+              body: `It is now ${timeStr}`,
               icon: '/logo192.png', // Fallback if no icon
               requireInteraction: false,
               silent: false
@@ -116,5 +125,5 @@ export const usePrayerNotifications = () => {
         // as the unique key `${activePrayer.name}-${now.getDate()}` handles uniqueness.
     }
 
-  }, [now, prayerTimes, settings.soundEnabled, playNotificationSound]);
+  }, [now, prayerTimes, settings.soundEnabled, playNotificationSound, settings.language]);
 };

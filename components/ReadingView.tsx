@@ -51,6 +51,19 @@ const BookmarkButton: React.FC<{
   );
 };
 
+// Helper to select edition based on language
+const getEdition = (lang: string) => {
+  switch(lang) {
+    case 'ar': return 'ar.jalalayn'; // Tafsir for Arabic users
+    case 'ru': return 'ru.kuliev';
+    case 'tr': return 'tr.diyanet';
+    case 'fr': return 'fr.hamidullah';
+    case 'de': return 'de.bubenheim';
+    case 'es': return 'es.cortes';
+    default: return 'en.asad';
+  }
+};
+
 export const ReadingView: React.FC<ReadingViewProps> = ({ surah, onBack, isBookmarked, toggleBookmark, initialAyahIndex = -1 }) => {
   const { settings } = useAppContext();
   
@@ -97,16 +110,18 @@ export const ReadingView: React.FC<ReadingViewProps> = ({ surah, onBack, isBookm
       setDuration(0);
 
       try {
-        // Only fetch text data (Quran & Translation)
+        const edition = getEdition(settings.language);
+        
+        // Fetch Quran text (Uthmani) + Translated Edition
         const response = await fetch(
-          `https://api.alquran.cloud/v1/surah/${surah.number}/editions/quran-uthmani,en.asad`
+          `https://api.alquran.cloud/v1/surah/${surah.number}/editions/quran-uthmani,${edition}`
         );
         
         if (!response.ok) throw new Error('Failed to load Surah');
         
         const data = await response.json();
         const arabicData = data.data[0].ayahs;
-        const englishData = data.data[1].ayahs;
+        const translationData = data.data[1].ayahs;
 
         // Helper to format ID for EveryAyah (e.g., 001001)
         const formatId = (num: number) => String(num).padStart(3, '0');
@@ -119,7 +134,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({ surah, onBack, isBookm
 
             return {
                 ...ayah,
-                translation: englishData[index].text,
+                translation: translationData[index].text, // Localized text
                 audio: audioUrl,
             };
         });
@@ -141,7 +156,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({ surah, onBack, isBookm
     };
 
     fetchSurahDetails();
-  }, [surah, activeReciter.subfolder]); // Re-run if reciter subfolder changes
+  }, [surah, activeReciter.subfolder, settings.language]); 
 
   // 3. Audio Event Listeners
   useEffect(() => {

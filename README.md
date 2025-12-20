@@ -1,43 +1,20 @@
-# Nurly — Minimalist Islamic Companion
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-![Project Status](https://img.shields.io/badge/status-active-success)
-![License](https://img.shields.io/badge/license-MIT-blue)
+# Run and deploy your AI Studio app
 
-**Nurly** is a premium, privacy-focused Islamic lifestyle application built with a focus on serenity, typography, and "Calm Tech" principles. It moves away from cluttered interfaces to provide a digital sanctuary for worship.
+This contains everything you need to run your app locally.
 
-## ✨ Philosophy
-*   **Atmosphere over Features:** Every screen is designed to be a "breath," not a dashboard.
-*   **Soft UI:** Uses a "Warm Paper" (Light) and "Deep Night" (Dark) aesthetic.
-*   **Respectful UX:** No gamification, no ads, no distractions.
+View your app in AI Studio: https://ai.studio/apps/drive/1S_mxaBqyOV1Erc9RB5Sl74SdNU564v27
 
-## 🚀 Key Features
-*   **Day Dashboard:** Elegant prayer times countdown with Hijri context.
-*   **Noble Quran:** Custom typography rendering with zero layout shift.
-*   **Smart Tasbih:** Tactile counter with intent-based session handling.
-*   **Refinings:** A spiritual reflection engine with internal Ayah deep-linking.
-*   **Ambient Mode:** Subconscious floating lines that create a living atmosphere.
+## Run Locally
 
-## 🛠 Tech Stack
-*   **Framework:** React 18
-*   **Styling:** Tailwind CSS (Strict Design Tokens)
-*   **Animation:** Framer Motion (Orchestrated Layouts)
-*   **Logic:** Custom Hooks for Geolocation & Prayer Times
-*   **Icons:** Lucide React
+**Prerequisites:**  Node.js
 
-## 🎨 Design System
-The app enforces a strict strict color palette using CSS Variables to ensure seamless Dark Mode transitions without "harsh" contrasts.
 
-*   **Light:** Warm Beige (`#FFF8F1`) & Sage Green (`#6BBF8A`)
-*   **Dark:** Deep Jungle (`#0C1E1A`) & Muted Gold (`#C9A86A`)
-
-## 📦 Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/nurly.git
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

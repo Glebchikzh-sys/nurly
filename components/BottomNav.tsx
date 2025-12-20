@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ViewState } from '../types';
+import { useAppContext } from '../contexts/AppContext';
 
 interface BottomNavProps {
   currentView: ViewState['currentView'];
@@ -8,15 +9,15 @@ interface BottomNavProps {
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({ currentView, onChangeView }) => {
+  const { t } = useAppContext();
+
   const navItems = [
-    { id: 'home', label: 'Home', icon: 'home' },
-    { id: 'quran', label: 'Quran', icon: 'menu_book' },
-    { id: 'qibla', label: 'Qibla', icon: 'explore' },
-    { id: 'settings', label: 'Settings', icon: 'settings' },
+    { id: 'home', label: t('home'), icon: 'home' },
+    { id: 'quran', label: t('quran'), icon: 'menu_book' },
+    { id: 'qibla', label: t('qibla'), icon: 'explore' },
+    { id: 'settings', label: t('settings'), icon: 'settings' },
   ];
 
-  // Hide nav on specific immersive screens if needed, but usually good to keep for easy nav
-  // Also hidden on desktop
   if (currentView === 'tasbih' || currentView === 'reading') return null;
 
   return (

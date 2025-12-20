@@ -52,13 +52,17 @@ export interface Reciter {
   subfolder: string;
 }
 
+export type Language = 'en' | 'ar' | 'ru' | 'tr' | 'fr' | 'de' | 'es';
+
 export interface AppSettings {
+  language: Language;
   calculationMethod: string;
   madhab: string;
   soundEnabled: boolean;
   locationEnabled: boolean;
   darkMode: boolean;
   activeReciter: Reciter;
+  realCompassEnabled: boolean;
 }
 
 export interface LocationState {
@@ -66,15 +70,19 @@ export interface LocationState {
   lng: number;
   name: string;
   isDefault: boolean; // True if using fallback (Makkah)
+  isManual: boolean;  // True if user manually set the location
   error: string | null;
 }
 
 export interface AppContextType {
   settings: AppSettings;
   updateSettings: (key: keyof AppSettings, value: any) => void;
+  t: (key: string) => string;
   
   location: LocationState;
   refreshLocation: () => void;
+  setManualLocation: (lat: number, lng: number, name: string) => void;
+  setLocationAuto: () => void;
   
   // Raw Data (Calculated)
   prayerTimes: PrayerTimes | null; 
@@ -95,6 +103,7 @@ export interface AppViewModel {
     name: string;
     time: string;
     isNext: boolean;
+    isActive: boolean; // Highlights the current prayer period
     isPast: boolean;
   }[];
   

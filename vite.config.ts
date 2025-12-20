@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
     return {
       // ДОБАВЬ ЭТУ СТРОКУ (замени 'nurly' на точное название твоего репозитория)
       base: '/nurly/', 
-      
+
       server: {
         port: 3000,
         host: '0.0.0.0',
