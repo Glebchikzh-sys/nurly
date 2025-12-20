@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* --- 1. ОПРЕДЕЛЕНИЕ ТЕМ (Цветовые токены) --- */
+
+:root {
+  /* Light Theme */
+  --bg-main: #FFF8F1;
+  --bg-surface: #FAEFE4;
+  --bg-secondary: #F3E6D8;
+  --text-primary: #2E2E2A;
+  --text-secondary: #6F7A70;
+  --accent-primary: #6BBF8A;
+  --accent-secondary: #D4B483;
+  --border-line: #E4D6C6;
+  --glow-color: rgba(107, 191, 138, 0.25);
+}
+
+.dark {
+  /* Dark Theme */
+  --bg-main: #0C1E1A;
+  --bg-surface: #122F29;
+  --bg-secondary: #173A32;
+  --text-primary: #E6ECE8;
+  --text-secondary: #9FB3AA;
+  --accent-primary: #3EB489;
+  --accent-secondary: #C9A86A;
+  --border-line: #1F3F36;
+  --glow-color: rgba(62, 180, 137, 0.3);
+}
+
+/* --- 2. НАСТРОЙКА TAILWIND THEME --- */
+
+@theme {
+  /* Привязываем CSS переменные к именам классов Tailwind */
+  --color-nurly-bg: var(--bg-main);
+  --color-nurly-surface: var(--bg-surface);
+  --color-nurly-secondary: var(--bg-secondary);
+  --color-nurly-text: var(--text-primary);
+  --color-nurly-muted: var(--text-secondary);
+  --color-nurly-accent: var(--accent-primary);
+  --color-nurly-gold: var(--accent-secondary);
+  --color-nurly-border: var(--border-line);
+
+  /* Шрифты */
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-serif: "Amiri", serif;
+
+  /* Анимации из твоего оригинала */
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-slide-up: slideUpCentered 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fadeIn 0.3s ease-out forwards;
+
+  @keyframes slideUpCentered {
+    0% { transform: translate(-50%, 100%); opacity: 0; }
+    100% { transform: translate(-50%, 0); opacity: 1; }
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* --- 3. БАЗОВЫЕ СТИЛИ ПРИЛОЖЕНИЯ --- */
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  /* Плавный переход при смене темы */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-sans);
+}
+
+/* Кастомный скроллбар (использует акцентный цвет темы) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 9999px;
+  opacity: 0.5;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
+
+/* Скрытие скроллбара */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Иконки Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  transition: font-variation-settings 0.3s ease;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.material-symbols-outlined.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Стилизация ползунка громкости/прогресса */
+input[type=range] {
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  margin-top: -5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  border: 2px solid var(--bg-main);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-secondary);
+  border-radius: 2px;
+}
+
+/* Фикс для выделения текста */
+::selection {
+  background-color: var(--accent-primary);
+  color: white;
+}
