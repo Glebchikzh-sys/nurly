@@ -1,25 +1,45 @@
 @import "tailwindcss";
 
-@theme {
-  /* Цвета из твоего конфига */
-  --color-cream: #FAFAF9;
-  --color-sage: #6B8E88;
-  --color-sage-dark: #4A6A64;
-  --color-sage-light: #89ACA6;
-  --color-ink: #111111;
-  --color-ink-muted: #777777;
+/* 1. Определяем переменные для Светлой и Темной тем */
+:root {
+  --bg-main: #FFF8F1;
+  --bg-surface: #FAEFE4;
+  --bg-secondary: #F3E6D8;
+  --text-primary: #2E2E2A;
+  --text-secondary: #6F7A70;
+  --accent-primary: #6BBF8A;
+  --accent-secondary: #D4B483;
+  --border-line: #E4D6C6;
+  --glow-color: rgba(107, 191, 138, 0.25);
+}
 
-  /* Шрифты */
+/* Когда на <html> вешается класс .dark, переменные меняются */
+.dark {
+  --bg-main: #0C1E1A;
+  --bg-surface: #122F29;
+  --bg-secondary: #173A32;
+  --text-primary: #E6ECE8;
+  --text-secondary: #9FB3AA;
+  --accent-primary: #3EB489;
+  --accent-secondary: #C9A86A;
+  --border-line: #1F3F36;
+  --glow-color: rgba(62, 180, 137, 0.3);
+}
+
+/* 2. Привязываем эти переменные к именам Tailwind */
+@theme {
+  --color-nurly-bg: var(--bg-main);
+  --color-nurly-surface: var(--bg-surface);
+  --color-nurly-secondary: var(--bg-secondary);
+  --color-nurly-text: var(--text-primary);
+  --color-nurly-muted: var(--text-secondary);
+  --color-nurly-accent: var(--accent-primary);
+  --color-nurly-gold: var(--accent-secondary);
+  --color-nurly-border: var(--border-line);
+
   --font-sans: "Inter", ui-sans-serif, system-ui;
   --font-serif: "Amiri", serif;
 
-  /* Тени */
-  --shadow-soft: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
-  --shadow-inner-soft: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
-
-  /* Анимации */
-  --animate-spin-slow: spin 3s linear infinite;
-  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-slide-up: slideUpCentered 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-fade-in: fadeIn 0.3s ease-out forwards;
 
@@ -33,66 +53,34 @@
   }
 }
 
-/* --- Твои базовые стили из HTML --- */
+/* 3. Базовые стили приложения */
 body {
-  background-color: #FAFAF9;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход тем */
   -webkit-tap-highlight-color: transparent;
-  color: #111111;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #6B8E88;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #4A6A64;
+/* Кастомный скроллбар */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { 
+  background: var(--accent-primary); 
+  border-radius: 9999px; 
+  opacity: 0.5;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Material Symbols */
+/* Остальные твои стили (Material Symbols, Range Input) */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   transition: font-variation-settings 0.3s ease;
-  display: inline-block;
-  vertical-align: middle;
-}
-.material-symbols-outlined.filled {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-/* Range Input */
-input[type=range] {
-  -webkit-appearance: none;
-  background: transparent;
-}
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: #6B8E88;
-  margin-top: -4px;
+  background: var(--accent-primary);
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 4px;
-  cursor: pointer;
-  background: rgba(0,0,0,0.05);
-  border-radius: 2px;
 }
