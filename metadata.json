@@ -1,0 +1,7 @@
+{
+  "name": "nurly",
+  "description": "A daily spiritual utility designed for focus and serenity, featuring prayer times, Quran reading, Qibla compass, and Tasbih.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
