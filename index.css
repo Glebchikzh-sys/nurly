@@ -1,10 +1,43 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@theme {
+  /* Цвета из твоего конфига */
+  --color-cream: #FAFAF9;
+  --color-sage: #6B8E88;
+  --color-sage-dark: #4A6A64;
+  --color-sage-light: #89ACA6;
+  --color-ink: #111111;
+  --color-ink-muted: #777777;
+
+  /* Шрифты */
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-serif: "Amiri", serif;
+
+  /* Тени */
+  --shadow-soft: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
+  --shadow-inner-soft: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+
+  /* Анимации */
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-slide-up: slideUpCentered 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fadeIn 0.3s ease-out forwards;
+
+  @keyframes slideUpCentered {
+    0% { transform: translate(-50%, 100%); opacity: 0; }
+    100% { transform: translate(-50%, 0); opacity: 1; }
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* --- Твои базовые стили из HTML --- */
 body {
   background-color: #FAFAF9;
   -webkit-tap-highlight-color: transparent;
+  color: #111111;
 }
 
 /* Custom Scrollbar */
@@ -23,7 +56,6 @@ body {
   background: #4A6A64;
 }
 
-/* Utilities */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -32,15 +64,22 @@ body {
   scrollbar-width: none;
 }
 
+/* Material Symbols */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   transition: font-variation-settings 0.3s ease;
+  display: inline-block;
+  vertical-align: middle;
 }
 .material-symbols-outlined.filled {
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
 /* Range Input */
+input[type=range] {
+  -webkit-appearance: none;
+  background: transparent;
+}
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 12px;
@@ -54,6 +93,6 @@ input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 4px;
   cursor: pointer;
-  background: transparent;
+  background: rgba(0,0,0,0.05);
   border-radius: 2px;
 }
