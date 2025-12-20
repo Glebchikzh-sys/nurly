@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Surah, Bookmark } from '../types';
 import { ReadingView } from './ReadingView';
 import { Skeleton } from './Skeleton';
+import { useAppContext } from '../contexts/AppContext';
 
 interface QuranViewProps {
   activeSurah?: Surah;
@@ -14,6 +15,7 @@ interface QuranViewProps {
 }
 
 export const QuranView: React.FC<QuranViewProps> = ({ activeSurah, onSelectSurah, onBackToList, isBookmarked, toggleBookmark, initialAyahIndex }) => {
+  const { t, settings } = useAppContext();
   const [search, setSearch] = useState('');
   const [surahs, setSurahs] = useState<Surah[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,31 +39,41 @@ export const QuranView: React.FC<QuranViewProps> = ({ activeSurah, onSelectSurah
     fetchSurahs();
   }, []);
 
-  const filteredSurahs = surahs.filter(s => 
-    s.englishName.toLowerCase().includes(search.toLowerCase()) || 
-    s.englishNameTranslation.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredSurahs = surahs.filter(s => {
+    const query = search.toLowerCase().trim();
+    if (!query) return true;
+    
+    return (
+      s.englishName.toLowerCase().includes(query) || 
+      s.englishNameTranslation.toLowerCase().includes(query) ||
+      s.number.toString() === query ||
+      s.number.toString().startsWith(query)
+    );
+  });
+
+  // Only show the English subtitle ("The Cow", "The Opener") if the app language is English
+  const showSubtitle = settings.language === 'en';
 
   return (
     <div className="flex h-full w-full bg-cream dark:bg-slate-900 overflow-hidden transition-colors duration-300">
       
       {/* LEFT COLUMN: Surah List */}
-      <div className={`flex-col h-full bg-cream dark:bg-slate-900 md:w-[30%] md:flex md:border-r md:border-black/5 dark:md:border-white/5 w-full transition-colors duration-300 ${activeSurah ? 'hidden' : 'flex'}`}>
+      <div className={`flex-col h-full bg-cream dark:bg-slate-900 md:w-[30%] md:flex md:border-r md:border-black/5 dark:md:border-white/5 w-full transition-colors duration-300 rtl:border-r-0 rtl:border-l ${activeSurah ? 'hidden' : 'flex'}`}>
         {/* Header */}
         <div className="sticky top-0 z-30 bg-cream/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-black/5 dark:border-white/5 px-6 pt-14 md:pt-8 pb-4 shrink-0 transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-3xl font-extrabold text-ink dark:text-slate-100 tracking-tight">The Noble Quran</h2>
+            <h2 className="text-3xl font-extrabold text-ink dark:text-slate-100 tracking-tight">{t('quran_reader')}</h2>
           </div>
           
           {/* Search Bar */}
           <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none rtl:left-auto rtl:right-0 rtl:pr-3 rtl:pl-0">
               <span className="material-symbols-outlined text-ink-muted dark:text-slate-400 group-hover:text-sage transition-colors">search</span>
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-3 rounded-xl bg-black/5 dark:bg-slate-800 border-none placeholder-ink-muted/70 dark:placeholder-slate-500 text-ink dark:text-slate-100 focus:ring-2 focus:ring-sage transition-all hover:bg-white dark:hover:bg-slate-700 hover:shadow-inner-soft focus:bg-white dark:focus:bg-slate-700"
-              placeholder="Search Surah..."
+              className="block w-full pl-10 pr-3 py-3 rounded-xl bg-black/5 dark:bg-slate-800 border-none placeholder-ink-muted/70 dark:placeholder-slate-500 text-ink dark:text-slate-100 focus:ring-2 focus:ring-sage transition-all hover:bg-white dark:hover:bg-slate-700 hover:shadow-inner-soft focus:bg-white dark:focus:bg-slate-700 rtl:pl-3 rtl:pr-10"
+              placeholder={t('search_quran')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -107,7 +119,7 @@ export const QuranView: React.FC<QuranViewProps> = ({ activeSurah, onSelectSurah
                   <button 
                     key={surah.number}
                     onClick={() => onSelectSurah(surah)}
-                    className={`flex items-center justify-between py-5 border-b md:border -mx-6 px-6 md:mx-0 md:px-4 md:rounded-xl md:my-1 group transition-colors duration-200 ease-in-out text-left cursor-pointer ${
+                    className={`flex items-center justify-between py-5 border-b md:border -mx-6 px-6 md:mx-0 md:px-4 md:rounded-xl md:my-1 group transition-colors duration-200 ease-in-out text-start cursor-pointer ${
                       isActive 
                         ? 'bg-[#E6F2F1] dark:bg-teal-900/50 border-sage dark:border-sage/50' 
                         : 'border-black/5 dark:border-white/5 md:border-transparent hover:bg-white dark:hover:bg-slate-800'
@@ -119,7 +131,9 @@ export const QuranView: React.FC<QuranViewProps> = ({ activeSurah, onSelectSurah
                       </span>
                       <div className="flex flex-col items-start gap-0.5">
                         <span className={`text-lg font-bold group-hover:text-sage-dark dark:group-hover:text-sage transition-colors ${isActive ? 'text-ink dark:text-slate-100' : 'text-ink dark:text-slate-200'}`}>{surah.englishName}</span>
-                        <span className="text-xs text-ink-muted dark:text-slate-400 font-medium">{surah.englishNameTranslation}</span>
+                        {showSubtitle && (
+                          <span className="text-xs text-ink-muted dark:text-slate-400 font-medium">{surah.englishNameTranslation}</span>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
@@ -149,8 +163,8 @@ export const QuranView: React.FC<QuranViewProps> = ({ activeSurah, onSelectSurah
             <div className="w-24 h-24 bg-sage/10 rounded-full flex items-center justify-center mb-6 animate-pulse">
               <span className="material-symbols-outlined text-sage text-5xl">menu_book</span>
             </div>
-            <h3 className="text-2xl font-bold text-ink dark:text-slate-200 mb-2">Select a Surah</h3>
-            <p className="text-ink-muted dark:text-slate-400">Choose a chapter from the list to begin reading.</p>
+            <h3 className="text-2xl font-bold text-ink dark:text-slate-200 mb-2">{t('select_surah')}</h3>
+            <p className="text-ink-muted dark:text-slate-400">{t('select_surah_desc')}</p>
           </div>
         )}
       </div>

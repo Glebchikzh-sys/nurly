@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useAppContext } from '../contexts/AppContext';
 
 interface AudioPlayerProps {
   isPlaying: boolean;
@@ -32,6 +33,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   playbackRate,
   onPlaybackRateChange
 }) => {
+  const { t } = useAppContext();
+
   // Format seconds to MM:SS
   const formatTime = (time: number) => {
     if (!time || isNaN(time)) return "0:00";
@@ -63,7 +66,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         <div className="hidden sm:flex w-1/4 flex-col justify-center overflow-hidden">
           <div className="flex items-baseline gap-2 truncate w-full">
             <span className="font-bold text-ink dark:text-slate-100 truncate text-sm leading-tight transition-colors">{surahName}</span>
-            <span className="text-xs font-bold text-sage whitespace-nowrap shrink-0">Ayah {ayahNumber}</span>
+            <span className="text-xs font-bold text-sage whitespace-nowrap shrink-0">{t('ayah')} {ayahNumber}</span>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-ink-muted dark:text-slate-400 truncate w-full mt-0.5 transition-colors">
             {reciterName}

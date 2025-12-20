@@ -1,8 +1,7 @@
-
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 interface State {
@@ -12,27 +11,21 @@ interface State {
 }
 
 export class DebugErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { 
-      hasError: false, 
-      error: null, 
-      errorInfo: null 
-    };
-  }
+  public state: State = {
+    hasError: false,
+    error: null,
+    errorInfo: null
+  };
 
-  static getDerivedStateFromError(error: Error): State {
-    // Update state so the next render will show the fallback UI.
+  public static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error, errorInfo: null };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Catch errors in any components below and re-render with error message
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error: error,
       errorInfo: errorInfo
     });
-    // You can also log error messages to an error reporting service here
     console.error("Uncaught error:", error, errorInfo);
   }
 
@@ -41,7 +34,6 @@ export class DebugErrorBoundary extends Component<Props, State> {
   };
 
   handleReset = () => {
-    // Attempt to clear local storage if it's a data corruption issue
     try {
         localStorage.clear();
         window.location.reload();
@@ -50,7 +42,7 @@ export class DebugErrorBoundary extends Component<Props, State> {
     }
   };
 
-  render() {
+  public render() {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAFAF9] p-6 text-ink font-sans">
@@ -86,7 +78,6 @@ export class DebugErrorBoundary extends Component<Props, State> {
               </button>
             </div>
 
-            {/* Debug Details */}
             <div className="mt-8 text-left">
               <details className="group cursor-pointer">
                 <summary className="text-xs font-bold text-ink-muted uppercase tracking-widest list-none flex items-center gap-2">

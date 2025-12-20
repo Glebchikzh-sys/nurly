@@ -1,5 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAppContext } from '../contexts/AppContext';
+import { useMobileScrollLock } from '../hooks/useMobileScrollLock';
 
 interface TasbihViewProps {
   onBack: () => void;
@@ -8,11 +10,15 @@ interface TasbihViewProps {
 type TasbihTarget = 33 | 99 | 'infinity';
 
 export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
+  const { t } = useAppContext();
   const [count, setCount] = useState(0);
   const [target, setTarget] = useState<TasbihTarget>(33);
   const [showModal, setShowModal] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [shakeTargetId, setShakeTargetId] = useState<TasbihTarget | null>(null);
+
+  // FORCE SCROLL LOCK FOR MODAL (Mobile Friendly)
+  useMobileScrollLock(showModal);
 
   // Circle calculations
   const radius = 120;
@@ -31,11 +37,11 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
 
     const nextCount = count + 1;
     setCount(nextCount);
-    triggerHaptic(15); // Light tap feedback
+    triggerHaptic(15); 
 
     const numericTarget = target === 'infinity' ? Infinity : target;
     if (nextCount === numericTarget) {
-      triggerHaptic(50); // Completion feedback
+      triggerHaptic(50); 
       setShowModal(true);
     }
   };
@@ -46,30 +52,24 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
   };
 
   const handleTargetChange = (newTarget: TasbihTarget) => {
-    // 1. Check validity: Cannot switch to a target lower than current count
     const numericNewTarget = newTarget === 'infinity' ? Infinity : newTarget;
     
     if (count > numericNewTarget) {
-        // INVALID: Block action and visual feedback
-        triggerHaptic(50); // Error buzz
+        triggerHaptic(50);
         setShakeTargetId(newTarget);
         setTimeout(() => setShakeTargetId(null), 500);
         return;
     }
 
-    // 2. VALID: Change target, PRESERVE COUNT
     setTarget(newTarget);
-    // Do not reset count
     triggerHaptic(10);
   };
 
-  // Calculate stroke dash offset
   const progress = target === 'infinity' ? 1 : Math.min(count / target, 1);
   const strokeDashoffset = circumference - progress * circumference;
 
   return (
     <div className="flex flex-col h-full bg-cream dark:bg-slate-900 transition-colors duration-300 relative overflow-hidden animate-fade-in select-none">
-      {/* Custom Styles for Keyframes */}
       <style>{`
         @keyframes popIn {
           0% { opacity: 0; transform: scale(0.95); }
@@ -92,7 +92,7 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
       <div className="absolute top-0 w-full z-40 flex items-center justify-between px-6 pt-12 md:pt-8 md:px-12 pointer-events-none">
         <button 
           onClick={onBack}
-          className="text-ink-muted dark:text-slate-400 hover:text-ink dark:hover:text-slate-200 transition-colors p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer pointer-events-auto"
+          className="text-ink-muted dark:text-slate-400 hover:text-ink dark:hover:text-slate-200 transition-colors p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer pointer-events-auto rtl:rotate-180"
         >
           <span className="material-symbols-outlined text-3xl">arrow_back</span>
         </button>
@@ -135,7 +135,6 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Main Interaction Area (Full Screen Clickable) */}
       <button 
         className="flex-1 w-full h-full flex flex-col items-center justify-center outline-none touch-manipulation cursor-default active:outline-none"
         onMouseDown={() => setIsPressed(true)}
@@ -143,7 +142,7 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
         onMouseLeave={() => setIsPressed(false)}
         onTouchStart={() => setIsPressed(true)}
         onTouchEnd={() => setIsPressed(false)}
-        onClick={handleIncrement} // Logic handles click (release)
+        onClick={handleIncrement} 
       >
         <div 
             className={`relative transition-transform duration-150 ease-out will-change-transform ${isPressed ? 'scale-95' : 'scale-100'}`}
@@ -152,9 +151,8 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
           <svg
             height={radius * 2}
             width={radius * 2}
-            className="transform -rotate-90"
+            className="transform -rotate-90 rtl:rotate-90" 
           >
-            {/* Background Track */}
             <circle
               className="stroke-gray-200 dark:stroke-slate-800 transition-colors"
               strokeWidth={stroke}
@@ -163,7 +161,6 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
               cx={radius}
               cy={radius}
             />
-            {/* Progress Indicator */}
             <circle
               className={`stroke-sage transition-colors ${target === 'infinity' ? 'hidden' : 'block'}`}
               strokeWidth={stroke}
@@ -175,7 +172,6 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
               cx={radius}
               cy={radius}
             />
-            {/* Infinity State Indicator (Full subtle ring) */}
             {target === 'infinity' && (
                <circle
                className="stroke-sage opacity-20 transition-colors"
@@ -188,7 +184,6 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
             )}
           </svg>
           
-          {/* Central Counter */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span className="text-7xl font-bold text-ink dark:text-slate-100 tabular-nums tracking-tighter drop-shadow-sm transition-colors">
               {count}
@@ -196,13 +191,11 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
           </div>
         </div>
         
-        {/* Helper Text */}
         <p className="absolute bottom-32 text-ink-muted/40 dark:text-slate-500/40 text-sm font-medium animate-pulse hidden md:block pointer-events-none transition-colors">
-            Tap anywhere to count
+            {t('tap_to_count')}
         </p>
       </button>
 
-      {/* Footer Reset Button */}
       <div className="absolute bottom-10 w-full z-30 flex justify-center pointer-events-none">
         <button 
           onClick={(e) => {
@@ -211,19 +204,22 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
           }}
           className="pointer-events-auto text-ink-muted/70 dark:text-slate-500/70 hover:text-red-500 dark:hover:text-red-400 text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
         >
-          Reset Counter
+          {t('reset_counter')}
         </button>
       </div>
 
-      {/* Completion Modal - Fixed Overlay */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
             <div className="bg-white dark:bg-slate-800 rounded-[32px] shadow-2xl border border-black/5 dark:border-white/5 p-8 max-w-sm w-full text-center animate-pop-in relative transition-colors">
                 <div className="w-20 h-20 bg-sage/10 dark:bg-sage/20 rounded-full flex items-center justify-center mx-auto mb-6">
                     <span className="material-symbols-outlined text-sage text-5xl filled">check</span>
                 </div>
-                <h2 className="text-3xl font-extrabold text-ink dark:text-slate-100 mb-2 tracking-tight transition-colors">Alhamdulillah</h2>
-                <p className="text-ink-muted dark:text-slate-400 font-medium mb-8 transition-colors">May Allah accept your Dhikr.</p>
+                <h2 className="text-3xl font-extrabold text-ink dark:text-slate-100 mb-2 tracking-tight transition-colors">
+                    {t('dhikr_complete_title')}
+                </h2>
+                <p className="text-ink-muted dark:text-slate-400 mb-8 font-medium transition-colors">
+                    {t('dhikr_complete_subtitle')}
+                </p>
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -231,7 +227,7 @@ export const TasbihView: React.FC<TasbihViewProps> = ({ onBack }) => {
                     }}
                     className="w-full bg-sage text-white font-bold text-lg py-4 rounded-full shadow-lg shadow-sage/30 hover:bg-sage-dark transition-all active:scale-95"
                 >
-                    Restart
+                    {t('restart')}
                 </button>
             </div>
         </div>
